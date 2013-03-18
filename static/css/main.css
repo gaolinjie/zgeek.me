@@ -697,18 +697,6 @@ a.btn-small {
   font-size: 12px;
   color: #a5a5a5;
 }
-
-      .topics .topic-item .meta .collegename {
-  -webkit-border-radius: first-value-of(3px) first-value-of(3px);
-  -moz-border-radius: 3px / 3px;
-  border-radius: 3px / 3px;
-  display: inline-block;
-  padding: 3px 4px;
-  background: #eee;
-}
-        .topics .topic-item .meta .collegename a {
-  color: #a5a5a5;
-}
       .topics .topic-item .meta .node {
   -webkit-border-radius: first-value-of(3px) first-value-of(3px);
   -moz-border-radius: 3px / 3px;
@@ -797,10 +785,6 @@ a.btn-small {
     .usercard .ui-header .username, .user-page .profile .ui-header .username {
   font-size: 18px;
   font-weight: bold;
-  color: #a5a5a5;
-}
-    .usercard .ui-header .collegename, .user-page .profile .ui-header .collegename {
-  font-size: 12px;
   color: #a5a5a5;
 }
     .usercard .ui-header .website a, .user-page .profile .ui-header .website a {
@@ -1090,10 +1074,6 @@ a.btn-small {
   margin: 0 0 0 5px;
 }
 
-.topic-reply .ui-content .reply-item .main .meta .collegename {
-  color: #999;
-  margin: 0 0 0 5px;
-}
           .topic-reply .ui-content .reply-item .main .meta .reply-username {
   color: #333;
 }

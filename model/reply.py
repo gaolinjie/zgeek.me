@@ -14,14 +14,12 @@ class ReplyModel(Query):
 
     def get_all_replies_by_topic_id(self, topic_id, num = 16, current_page = 1):
         where = "topic_id = %s" % topic_id
-        join = "LEFT JOIN user ON reply.author_id = user.uid LEFT JOIN college ON reply.college_id = college.id"
+        join = "LEFT JOIN user ON reply.author_id = user.uid"
         order = "id ASC"
         field = "reply.*, \
                 user.username as author_username, \
                 user.nickname as author_nickname, \
-                user.avatar as author_avatar,\
-                college.id as author_collegeid,\
-                college.name as author_collegename"
+                user.avatar as author_avatar"
         return self.where(where).order(order).join(join).field(field).pages(current_page = current_page, list_rows = num)
 
     def add_new_reply(self, reply_info):

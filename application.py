@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 #
-# Copyright 2013 3n1b.com
+# Copyright 2013 zgeek.me
 
 # cat /etc/mime.types
 # application/octet-stream    crx
@@ -33,14 +33,14 @@ from jinja2 import Environment, FileSystemLoader
 
 define("port", default = 80, help = "run on the given port", type = int)
 define("mysql_host", default = "localhost", help = "community database host")
-define("mysql_database", default = "3n1b", help = "community database name")
-define("mysql_user", default = "3n1b", help = "community database user")
-define("mysql_password", default = "3n1b", help = "community database password")
+define("mysql_database", default = "zgeek", help = "community database name")
+define("mysql_user", default = "zgeek", help = "community database user")
+define("mysql_password", default = "zgeek", help = "community database password")
 
 class Application(tornado.web.Application):
     def __init__(self):
         settings = dict(
-            blog_title = u"叁年壹班",
+            blog_title = u"zgeek.me",
             template_path = os.path.join(os.path.dirname(__file__), "templates"),
             static_path = os.path.join(os.path.dirname(__file__), "static"),
             xsrf_cookies = True,
@@ -59,7 +59,6 @@ class Application(tornado.web.Application):
             (r"/t/edit/(.*)", handler.topic.EditHandler),
             (r"/reply/edit/(.*)", handler.topic.ReplyEditHandler),
             (r"/node/(.*)", handler.topic.NodeTopicsHandler),
-            (r"/college/(.*)", handler.topic.CollegeTopicsHandler),
             (r"/u/(.*)/topics", handler.topic.UserTopicsHandler),
             (r"/u/(.*)/replies", handler.topic.UserRepliesHandler),
             (r"/u/(.*)/favorites", handler.topic.UserFavoritesHandler),
@@ -69,7 +68,6 @@ class Application(tornado.web.Application):
             (r"/notifications", handler.notification.ListHandler),
             (r"/members", handler.topic.MembersHandler),
             (r"/nodes", handler.topic.NodesHandler),
-            (r"/colleges", handler.topic.CollegesHandler),
             (r"/setting", handler.user.SettingHandler),
             (r"/setting/avatar", handler.user.SettingAvatarHandler),
             (r"/setting/avatar/gravatar", handler.user.SettingAvatarFromGravatarHandler),
@@ -78,9 +76,6 @@ class Application(tornado.web.Application):
             (r"/login", handler.user.LoginHandler),
             (r"/logout", handler.user.LogoutHandler),
             (r"/register", handler.user.RegisterHandler),
-            (r"/register/college", handler.user.RegisterCollegeHandler),
-            (r"/register/college/(.*)", handler.user.SetCollegeHandler),
-            (r"/s/college/(.*)", handler.topic.CollegesHandler),
             (r"/s/node/(.*)", handler.topic.NodesHandler),
             (r"/f/node/(.*)", handler.topic.FollowNodeHandler),
             (r"/f/user/(.*)", handler.topic.FollowUserHandler),
@@ -115,7 +110,6 @@ class Application(tornado.web.Application):
         self.reply_model = self.loader.use("reply.model")
         self.plane_model = self.loader.use("plane.model")
         self.node_model = self.loader.use("node.model")
-        self.college_model = self.loader.use("college.model")
         self.province_model = self.loader.use("province.model")
         self.notification_model = self.loader.use("notification.model")
         self.vote_model = self.loader.use("vote.model")

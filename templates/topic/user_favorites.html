@@ -66,7 +66,6 @@
             <img src="/static/avatar/m_{{ user_info.avatar or 'default.png' }}?t={{ gen_random() }}" alt="" class="avatar" />
         </a>
         <div class="username">{{ user_info.username }}</div>
-        <div class="collegename">{{ user_info.collegename }}</div>
         <div class="website">{{ user_info.website or '' }}</div>
     </div>
     <div class="ui-content">
@@ -127,16 +126,6 @@
     <div class="ui-content hot-nodes">
         {% for node in hot_nodes %}
         <a href="/node/{{ node.slug }}">{{ node.name }}</a>
-        {% endfor %}
-    </div>
-</div>
-<div class="sidebox container-box mt10 ">
-    <div class="ui-header">
-        <span class="title">热门学校<div class="fr"><a href="/colleges">all</a></div></span>
-    </div>
-    <div class="ui-content hot-nodes">
-        {% for college in hot_colleges %}
-        <a href="/college/{{ college.id }}">{{ college.name }}</a>
         {% endfor %}
     </div>
 </div>

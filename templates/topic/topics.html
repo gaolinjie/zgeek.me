@@ -2,23 +2,12 @@
 
 {% block main %}
 <div class="subnav">
-    {% if user_info and college: %}
     {% set tab_bar = [
-        ('/', 'topic', '所有大学'),
-        ('/?tab=college', 'college', college.name),                   
+        ('/', 'topic', '所有话题'),                  
         ('/?tab=interest', 'interest', '兴趣小组'),
         ('/?tab=follows', 'follows', '关注的人'),
         ('#hotnav', 'hotnav', '热门导航'),               
-    ] -%}
-    {% else: %}
-    {% set tab_bar = [
-        ('/', 'topic', '所有大学'),   
-        ('/?tab=college', 'college', '我的大学'),            
-        ('/?tab=interest', 'interest', '兴趣小组'),
-        ('/?tab=follows', 'follows', '关注的人'),  
-        ('#hotnav', 'hotnav', '热门导航'),                 
-    ] -%}
-    {% endif %}
+    ] %}
 
     {% set active_page = active_page|default('index') -%}
     <ul class="nav nav-pills">
@@ -28,22 +17,12 @@
         </li>
         {% endfor %}
         <div class="subnav_btn">
-            <a class="btn btn-small fr" type="button" style="color:#a2a2a2"href="/t/create/?c={{college.id}}&n={{ node.slug }}">发起新话题</a>
+            <a class="btn btn-small fr" type="button" style="color:#a2a2a2"href="/t/create/?n={{ node.slug }}">发起新话题</a>
         </div>
     </ul>
 </div>
 
 <div class="topics container-box deprecated-mt10">
-    {% if not college %}
-    <div class="alert alert-success" style="margin-bottom: 0px">
-        <a class="close" data-dismiss="alert">×</a>
-        <span>
-            <a href="/register/college" style="color: #468847;">
-                您尚未设置您的学校，点击本链接进行设置，完成注册！
-            </a>
-        </span>
-    </div>
-    {% endif %}
     
     {% for topic in topics.list %}
     <div class="topic-item">
@@ -55,10 +34,6 @@
                 <a href="/t/{{ topic.id }}#reply{{ topic.reply_count or 0 }}">{{ topic.title }}</a>
             </h3>
             <div class="meta">
-                <span class="collegename">
-                    <a href="/college/{{ topic.college_id }}">{{ topic.college_name }}</a>
-                </span>
-                •
                 <span class="node">
                     <a href="/node/{{ topic.node_slug }}">{{ topic.node_name }}</a>
                 </span>
@@ -123,7 +98,6 @@
             <img src="/static/avatar/m_{{ user_info.avatar or 'default.png' }}?t={{ gen_random() }}" alt="" class="avatar" />
         </a>
         <div class="username">{{ user_info.username }}</div>
-        <div class="collegename">{{ user_info.collegename }}</div>
         <div class="website">
             <a href="{{ user_info.website or '' }}">{{ user_info.website or '' }}</a>
         </div>
@@ -214,16 +188,6 @@
     <div class="ui-content hot-nodes">
         {% for node in hot_nodes %}
         <a href="/node/{{ node.slug }}">{{ node.name }}</a>
-        {% endfor %}
-    </div>
-</div>
-<div class="sidebox container-box mt10 ">
-    <div class="ui-header">
-        <span class="title">热门学校<div class="fr"><a href="/colleges">all</a></div></span>
-    </div>
-    <div class="ui-content hot-nodes">
-        {% for college in hot_colleges %}
-        <a href="/college/{{ college.id }}">{{ college.name }}</a>
         {% endfor %}
     </div>
 </div>

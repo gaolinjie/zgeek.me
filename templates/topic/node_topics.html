@@ -3,7 +3,7 @@
 {% block main %}
 <div class="topics container-box node-topics">
     <div class="ui-header">
-        <a class="btn btn-small fr" type="button" href="/t/create/?c={{college.id}}&n={{ node.slug }}">发起新话题</a>
+        <a class="btn btn-small fr" type="button" href="/t/create/?n={{ node.slug }}">发起新话题</a>
         <span class="bread-nav" style="font-size:14px;"> <a href="/">叁年壹班</a> › {{ node.name }}</span>
         <span class="label label-success" style="margin-left:4px"><a href="/f/node/{{ node.slug }}" style="color:#FFFFFF">{{ follow_text }}</a></span>
     </div>
@@ -19,10 +19,6 @@
                     <a href="/t/{{ topic.id }}#reply{{ topic.reply_count or 0 }}">{{ topic.title }}</a>
                 </h3>
                 <div class="meta">
-                    <span class="collegename">
-                        <a href="/college/{{ topic.college_id }}">{{ topic.college_name }}</a>
-                    </span>
-                    •
                     <span class="node">
                         <a href="/node/{{ topic.node_slug }}">{{ topic.node_name }}</a>
                     </span>
@@ -73,7 +69,6 @@
             <img src="/static/avatar/m_{{ user_info.avatar or 'default.png' }}?t={{ gen_random() }}" alt="" class="avatar" />
         </a>
         <div class="username">{{ user_info.username }}</div>
-        <div class="collegename">{{ user_info.collegename }}</div>
         <div class="website">
             <a href="{{ user_info.website or '' }}">{{ user_info.website or '' }}</a>
         </div>
@@ -145,16 +140,6 @@
     <div class="ui-content hot-nodes">
         {% for node in hot_nodes %}
         <a href="/node/{{ node.slug }}">{{ node.name }}</a>
-        {% endfor %}
-    </div>
-</div>
-<div class="sidebox container-box mt10 ">
-    <div class="ui-header">
-        <span class="title">热门学校<div class="fr"><a href="/colleges">all</a></div></span>
-    </div>
-    <div class="ui-content hot-nodes">
-        {% for college in hot_colleges %}
-        <a href="/college/{{ college.id }}">{{ college.name }}</a>
         {% endfor %}
     </div>
 </div>

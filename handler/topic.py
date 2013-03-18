@@ -30,7 +30,6 @@ class IndexHandler(BaseHandler):
         user_info = self.current_user
         page = int(self.get_argument("p", "1"))
         template_variables["user_info"] = user_info
-        user_college = self.college_model.get_college_by_college_id(1001)
         if(user_info):
             template_variables["user_info"]["counter"] = {
                 "topics": self.topic_model.get_user_all_topics_count(user_info["uid"]),
@@ -39,24 +38,19 @@ class IndexHandler(BaseHandler):
                 "messages": self.message_model.get_user_unread_message_count(user_info["uid"]),
                 "favorites": self.favorite_model.get_user_favorite_count(user_info["uid"]),
             }
-            user_college = self.college_model.get_college_by_college_name(user_info["collegename"])
             if(tab=="index"):
                 template_variables["topics"] = self.topic_model.get_all_topics(current_page = page)           
-            if(tab=="college"):
-                template_variables["topics"] = self.topic_model.get_all_topics_by_college_id(current_page = page, college_id = user_college.id)
             if(tab=="interest"):
                 template_variables["topics"] = self.interest_model.get_user_all_interest_topics(user_id = user_info["uid"], current_page = page)
             if(tab=="follows"):
                 template_variables["topics"] = self.follow_model.get_user_all_follow_topics(user_id = user_info["uid"], current_page = page)
         else:
-            if(tab=="college"):
-                self.redirect("/register")
             if(tab=="interest"):
                 self.redirect("/register")
             if(tab=="follows"):
                 self.redirect("/register")
             template_variables["topics"] = self.topic_model.get_all_topics(current_page = page);
-        template_variables["college"] = user_college
+
         template_variables["status_counter"] = {
             "users": self.user_model.get_all_users_count(),
             "nodes": self.node_model.get_all_nodes_count(),
@@ -70,12 +64,9 @@ class IndexHandler(BaseHandler):
             template_variables["active_page"] = tab      
         template_variables["planes"] = self.plane_model.get_all_planes_with_nodes()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         template_variables["hot_topics"] = self.topic_model.get_all_hot_topics()         
         template_variables["gen_random"] = gen_random    
         notice_text = "暂时还没有话题，发出您的讨论吧。"
-        if (tab == "college"):
-            notice_text = "你学校下暂时还没有话题，发出您的讨论吧。"
         if (tab == "interest"):
             notice_text = "这里列出了您所关注小组下的最新话题，暂时还没有话题，发出您的讨论吧。"
         if (tab == "follows"):
@@ -89,7 +80,6 @@ class NodeTopicsHandler(BaseHandler):
         user_info = self.current_user
         page = int(self.get_argument("p", "1"))
         template_variables["user_info"] = user_info
-        user_college = self.college_model.get_college_by_college_id(1001)
         current_node = self.node_model.get_node_by_node_slug(node_slug);
         follow_text = "+关注"
         if(user_info):
@@ -100,12 +90,10 @@ class NodeTopicsHandler(BaseHandler):
                 "notifications": self.notification_model.get_user_unread_notification_count(user_info["uid"]),
                 "messages": self.message_model.get_user_unread_message_count(user_info["uid"]),
             }
-            user_college = self.college_model.get_college_by_college_name(user_info["collegename"])
             interest = self.interest_model.get_interest_info_by_user_id_and_node_id(user_info["uid"], current_node.id)
             if(interest):
                 follow_text = "取消关注"
         template_variables["follow_text"] = follow_text
-        template_variables["college"] = user_college
         template_variables["topics"] = self.topic_model.get_all_topics_by_node_slug(current_page = page, node_slug = node_slug)
         template_variables["node"] = current_node;
         template_variables["active_page"] = "topic"
@@ -115,31 +103,7 @@ class NodeTopicsHandler(BaseHandler):
             wallpaper = self.get_wallpaper()
         template_variables["wallpaper"] = wallpaper
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/node_topics.html", **template_variables)
-
-class CollegeTopicsHandler(BaseHandler):
-    def get(self, college_id, template_variables = {}):
-        user_info = self.current_user
-        page = int(self.get_argument("p", "1"))
-        template_variables["user_info"] = user_info
-        if(user_info):
-            template_variables["user_info"]["counter"] = {
-                "topics": self.topic_model.get_user_all_topics_count(user_info["uid"]),
-                "replies": self.reply_model.get_user_all_replies_count(user_info["uid"]),
-                "favorites": self.favorite_model.get_user_favorite_count(user_info["uid"]),
-                "notifications": self.notification_model.get_user_unread_notification_count(user_info["uid"]),
-                "messages": self.message_model.get_user_unread_message_count(user_info["uid"]),
-            }
-        template_variables["topics"] = self.topic_model.get_all_topics_by_college_id(current_page = page, college_id = college_id)
-        template_variables["college"] = self.college_model.get_college_by_college_id(college_id)
-        template_variables["node"] = self.node_model.get_node_by_node_slug("qna")
-        template_variables["active_page"] = "topic"
-        template_variables["gen_random"] = gen_random
-        template_variables["wallpaper"] = self.get_wallpaper()
-        template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
-        self.render("topic/college_topics.html", **template_variables)
 
 class ViewHandler(BaseHandler):
     def get(self, topic_id, template_variables = {}):
@@ -169,7 +133,6 @@ class ViewHandler(BaseHandler):
         template_variables["replies"] = self.reply_model.get_all_replies_by_topic_id(topic_id, current_page = page)
         template_variables["active_page"] = "topic"
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()  
 
         # update topic reply_count and hits
 
@@ -204,12 +167,9 @@ class ViewHandler(BaseHandler):
             self.get(template_variables)
             return
 
-        college = self.college_model.get_college_by_college_name(self.current_user["collegename"])
-
         reply_info = {
             "author_id": self.current_user["uid"],
             "topic_id": form.tid.data,
-            "college_id": college["id"],
             # "content": XssCleaner().strip(form.content.data),
             "content": form.content.data,
             "created": time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -275,10 +235,8 @@ class ViewHandler(BaseHandler):
 
 class CreateHandler(BaseHandler):
     @tornado.web.authenticated
-    def get(self, college_node = None, template_variables = {}):
+    def get(self, node = None, template_variables = {}):
         user_info = self.current_user
-        if (user_info["collegename"]=="请设置您的学校"):
-            self.redirect(self.get_argument("next", "/register/college"))
         template_variables["user_info"] = user_info
         template_variables["user_info"]["counter"] = {
             "topics": self.topic_model.get_user_all_topics_count(user_info["uid"]),
@@ -288,27 +246,21 @@ class CreateHandler(BaseHandler):
             "messages": self.message_model.get_user_unread_message_count(user_info["uid"]),
         }
         template_variables["gen_random"] = gen_random
-        college_id = self.get_argument('c', "0")
         node_slug = self.get_argument('n', "qna")
         node = self.node_model.get_node_by_node_slug(node_slug)
-        college = self.college_model.get_college_by_college_id(college_id)
         template_variables["node"] = node
-        template_variables["college"] = college
         template_variables["active_page"] = "topic"
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/create.html", **template_variables)
 
     @tornado.web.authenticated
-    def post(self, college_node = None, template_variables = {}):
+    def post(self, node = None, template_variables = {}):
         print "CreateHandler:post"
         template_variables = {}
 
-        college_id = self.get_argument('c', "0")
         node_slug = self.get_argument('n', "qna")
         node = self.node_model.get_node_by_node_slug(node_slug)
-        college = self.college_model.get_college_by_college_id(college_id)
 
         # validate the fields
         form = CreateForm(self)
@@ -328,7 +280,6 @@ class CreateHandler(BaseHandler):
             "created": time.strftime('%Y-%m-%d %H:%M:%S'),
             "reply_count": 0,
             "last_touched": time.strftime('%Y-%m-%d %H:%M:%S'),
-            "college_id": college["id"],
         }
 
         reply_id = self.topic_model.add_new_topic(topic_info)
@@ -361,7 +312,6 @@ class EditHandler(BaseHandler):
         template_variables["active_page"] = "topic"
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/edit.html", **template_variables)
 
     @tornado.web.authenticated
@@ -515,7 +465,6 @@ class UserTopicsHandler(BaseHandler):
         template_variables["gen_random"] = gen_random
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/user_topics.html", **template_variables)
 
 class UserRepliesHandler(BaseHandler):
@@ -540,7 +489,6 @@ class UserRepliesHandler(BaseHandler):
         template_variables["gen_random"] = gen_random
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/user_replies.html", **template_variables)
 
 class UserFavoritesHandler(BaseHandler):
@@ -565,7 +513,6 @@ class UserFavoritesHandler(BaseHandler):
         template_variables["gen_random"] = gen_random
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/user_favorites.html", **template_variables)
 
 class ReplyEditHandler(BaseHandler):
@@ -585,7 +532,6 @@ class ReplyEditHandler(BaseHandler):
         template_variables["active_page"] = "topic"
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()
         self.render("topic/reply_edit.html", **template_variables)
 
     @tornado.web.authenticated
@@ -688,11 +634,10 @@ class MembersHandler(BaseHandler):
         template_variables["wallpaper"] = self.get_wallpaper()
         template_variables["planes"] = self.plane_model.get_all_planes_with_nodes()
         template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges() 
         self.render("topic/members.html", **template_variables)
 
 class NodesHandler(BaseHandler):
-    def get(self, college_node = None, template_variables = {}):
+    def get(self, node = None, template_variables = {}):
         print "NodesHandler:get"
         user_info = self.current_user
         template_variables["user_info"] = user_info
@@ -710,58 +655,18 @@ class NodesHandler(BaseHandler):
             "topics": self.topic_model.get_all_topics_count(),
             "replies": self.reply_model.get_all_replies_count(),
         }
-        college_id = self.get_argument('c', "0")
-        college = self.college_model.get_college_by_college_id(college_id)
+
         if (self.request.path == "/nodes"):
             node_prefix = "/node/"
         else:
-            node_prefix = "/t/create/?c="+ str(college.id) +"&n="              
-        template_variables["college"] = college
+            node_prefix = "/t/create/?n="              
         template_variables["node_prefix"] = node_prefix
         template_variables["planes"] = self.plane_model.get_all_planes_with_nodes()
-        template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()  
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()       
+        template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()    
         template_variables["gen_random"] = gen_random 
         template_variables["active_page"] = "nodes"  
         template_variables["wallpaper"] = self.get_wallpaper()    
         self.render("topic/nodes.html", **template_variables)
-
-class CollegesHandler(BaseHandler):
-    def get(self, college_node = None, template_variables = {}):
-        user_info = self.current_user
-        template_variables["user_info"] = user_info
-        if(user_info):
-            template_variables["user_info"]["counter"] = {
-                "topics": self.topic_model.get_user_all_topics_count(user_info["uid"]),
-                "replies": self.reply_model.get_user_all_replies_count(user_info["uid"]),
-                "notifications": self.notification_model.get_user_unread_notification_count(user_info["uid"]),
-                "messages": self.message_model.get_user_unread_message_count(user_info["uid"]),
-                "favorites": self.favorite_model.get_user_favorite_count(user_info["uid"]),
-            }
-        template_variables["status_counter"] = {
-            "users": self.user_model.get_all_users_count(),
-            "nodes": self.node_model.get_all_nodes_count(),
-            "topics": self.topic_model.get_all_topics_count(),
-            "replies": self.reply_model.get_all_replies_count(),
-        }
-        node_slug = self.get_argument('n', "qna")
-        node = self.node_model.get_node_by_node_slug(node_slug)
-        template_variables["node"] = node
-        if (self.request.path == "/colleges"):
-            college_prefix = "/college/"
-            college_postfix = ""
-        else:
-            college_prefix = "/t/create/?c="
-            college_postfix = "&n=" + node.slug    
-        template_variables["college_prefix"] = college_prefix
-        template_variables["college_postfix"] = college_postfix   
-        template_variables["provinces"] = self.province_model.get_all_provinces_with_colleges()
-        template_variables["hot_nodes"] = self.node_model.get_all_hot_nodes()
-        template_variables["hot_colleges"] = self.college_model.get_all_hot_colleges()         
-        template_variables["gen_random"] = gen_random       
-        template_variables["active_page"] = "colleges" 
-        template_variables["wallpaper"] = self.get_wallpaper() 
-        self.render("topic/colleges.html", **template_variables)
 
 class FollowNodeHandler(BaseHandler):
     def get(self, node_slug = None, template_variables = {}):

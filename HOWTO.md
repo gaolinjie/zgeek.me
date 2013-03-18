@@ -52,24 +52,22 @@ HOWTO deploy on Linode
 
 ###Create database and then execute sql file in dbstructure/
 	$ mysql -u root -p
-	mysql> CREATE DATABASE 3n1b;
-	mysql> GRANT ALL PRIVILEGES ON 3n1b.* TO '3n1b'@'localhost' IDENTIFIED BY '3n1b';
+	mysql> CREATE DATABASE zgeek;
+	mysql> GRANT ALL PRIVILEGES ON zgeek.* TO 'zgeek'@'localhost' IDENTIFIED BY 'zgeek';
 	mysql> exit
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/3n1b.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/node.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/college.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/plane.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/province.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/interest.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/follow.sql
-	$ mysql -u 3n1b -p --database=3n1b < dbstructure/message.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/zgeek.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/node.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/plane.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/interest.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/follow.sql
+	$ mysql -u zgeek -p --database=zgeek < dbstructure/message.sql
 
 ###Create symbolic links to conf files
 	$ cd /etc/nginx 
 	$ rm nginx.conf
-	$ ln -s /srv/www/3n1b.com/conf/nginx.conf nginx.conf 
+	$ ln -s /srv/www/zgeek.me/conf/nginx.conf nginx.conf 
 	$ cd
-	$ ln -s /srv/www/3n1b.com/conf/supervisord.conf supervisord.conf  
+	$ ln -s /srv/www/zgeek.me/conf/supervisord.conf supervisord.conf  
 
 ###Create nginx user
 	$ adduser --system --no-create-home --disabled-login --disabled-password --group nginx 
@@ -84,5 +82,5 @@ HOWTO deploy on Linode
 ###Visit your public IP address and enjoy!
 
 ###Update your web app
-	$ cd /srv/www/3n1b.com
+	$ cd /srv/www/zgeek.me
 	$ git pull
