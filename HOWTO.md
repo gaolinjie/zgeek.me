@@ -38,6 +38,7 @@ HOWTO deploy on Linode
 ###Install python mysql
 	$ easy_install -U distribute
 	$ apt-get install libmysqld-dev libmysqlclient-dev
+        $ apt-get install python-dev
 	$ pip install mysql-python
 	$ apt-get install python-MySQLdb
 
@@ -61,6 +62,13 @@ HOWTO deploy on Linode
 	$ mysql -u zgeek -p --database=zgeek < dbstructure/interest.sql
 	$ mysql -u zgeek -p --database=zgeek < dbstructure/follow.sql
 	$ mysql -u zgeek -p --database=zgeek < dbstructure/message.sql
+
+###Install Torndb
+        $ cd /
+        $ git clone git://github.com/bdarnell/torndb.git
+        $ cd /torndb
+        $ python setup.py build
+        $ python setup.py install
 
 ###Create symbolic links to conf files
 	$ cd /etc/nginx 
